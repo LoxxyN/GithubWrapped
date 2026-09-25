@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Wrapped
 
-## Getting Started
+Персональный годовой отчёт по GitHub в формате «Spotify Wrapped»: вводишь username — получаешь свой год одной историей: коммиты, языки, streak, chronotype и лучший проект.
 
-First, run the development server:
+**Автор:** [@LoxxyN](https://github.com/LoxxyN) · **Исходники:** [LoxxyN/GithubWrapped](https://github.com/LoxxyN/GithubWrapped)
+
+## Стек
+
+- [Next.js 16](https://nextjs.org) (App Router) + TypeScript
+- [Tailwind CSS 4](https://tailwindcss.com)
+- [Three.js](https://threejs.org) + [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber) — WebGL-фон Silk
+- [lucide-react](https://lucide.dev) — иконки
+- GitHub REST API (без SDK, обычный `fetch`)
+
+## Старт
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Открыть [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Переменные окружения
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Переменная | Описание |
+| --- | --- |
+| `GITHUB_TOKEN` | GitHub PAT для запросов к API. **Опциональна:** без неё проект работает на демо-данных (`source: 'mock'`) |
 
-## Learn More
+Токен живёт только на сервере (в route handler) и никогда не уходит на клиент.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# .env.local
+GITHUB_TOKEN=ghp_...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Страницы
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| URL | Описание |
+| --- | --- |
+| `/` | Лендинг: инпут с валидацией username и WebGL-фон |
+| `/wrapped/[username]` | Иммерсивная презентация со слайдами (в разработке) |
+| `GET /api/wrapped/[username]` | API: `WrappedData` со статистикой, ошибки мапятся в 400/404/429 |
 
-## Deploy on Vercel
+## API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`GET /api/wrapped/[username]` возвращает:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```json
+{
+  "year": 2026,
+  "profile": { "login": "octocat", "avatarUrl": "..." },
+  "stats": {
+    "totalCommits": 1234,
+    "languages": [{ "name": "TypeScript", "commits": 800, "color": "..." }],
+    "months": [{ "label": "Январь", "commits": 120 }],
+    "longestStreak": { "days": 14, "start": "...", "end": "..." },
+    "chronotype": "night-owl",
+    "topRepository": { "name": "...", "url": "...", "commits": 300 }
+  },
+  "source": "github",
+  "generatedAt": "2026-09-25T..."
+}
+```
+
+Коды ошибок: `invalid-username` (400), `not-found` (404), `rate-limit` (429), `empty`, `unavailable`.
+
+## Структура
+
+```
+app/
+  page.tsx                      # лендинг
+  wrapped/[username]/page.tsx   # экран слайдов (заглушка)
+  api/wrapped/[username]/       # route handler
+  _components/                  # секции страниц (Landing, WrappedExperience)
+src/
+  shared/
+    ui/                         # переиспользуемые: Logo, Silk
+    lib/api/                    # github.ts, mock-data.ts
+    lib/utils/                  # calculations, validation, format
+    lib/types/                  # типы WrappedData и др.
+```
+
+## Команды проверки
+
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+## Статус
+
+Реализован лендинг и серверная часть (расчёты, API, демо-данные). Экран слайдов `WrappedExperience` написан, но ещё не подключён к `/wrapped/[username]` — подробности в [plan.md](./plan.md).
