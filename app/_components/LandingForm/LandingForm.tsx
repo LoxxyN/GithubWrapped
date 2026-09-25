@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useState, type FormEvent } from 'react'
 import './LandingForm.css'
 
-const suggestions = ['octocat', 'sindresorhus', 'gaearon']
+const suggestions = ['octocat', 'loxxyn', 'sindresorhus', 'gaearon']
 
 export const LandingForm = () => {
 	const router = useRouter()

@@ -1,9 +1,4 @@
-import type {
-	GitHubEvent,
-	GitHubProfile,
-	GitHubRepository,
-	WrappedData,
-} from '../types/wrapped'
+import type { WrappedData } from '../types/wrapped'
 
 const getHash = (value: string) =>
 	value.split('').reduce((hash, character) => hash + character.charCodeAt(0), 0)
@@ -90,50 +85,4 @@ export const getMockWrappedData = (
 		source: 'mock',
 		generatedAt: new Date().toISOString(),
 	}
-}
-
-export const getMockProfile = (username: string): GitHubProfile => ({
-	login: username,
-	name: username,
-	avatarUrl: null,
-	followers: 84,
-	publicRepos: 24,
-})
-
-export const getMockEvents = (username: string): GitHubEvent[] => {
-	const data = getMockWrappedData(username)
-	return Array.from({ length: 12 }, (_, index) => ({
-		id: `mock-${username}-${index}`,
-		type: 'PushEvent',
-		createdAt: `${data.year}-${String(index + 1).padStart(2, '0')}-12T21:30:00.000Z`,
-		repository: data.stats.topRepository.name,
-		commits: data.stats.months[index].commits,
-	}))
-}
-
-export const getMockRepositories = (username: string): GitHubRepository[] => {
-	const data = getMockWrappedData(username)
-	return [
-		{
-			name: data.stats.topRepository.name,
-			stars: data.stats.topRepository.stars,
-			language: data.stats.topRepository.language,
-			fork: false,
-			pushedAt: `${data.year}-08-12T21:30:00.000Z`,
-		},
-		{
-			name: 'design-system',
-			stars: 21,
-			language: 'CSS',
-			fork: false,
-			pushedAt: `${data.year}-07-20T10:30:00.000Z`,
-		},
-		{
-			name: 'api-playground',
-			stars: 12,
-			language: 'JavaScript',
-			fork: false,
-			pushedAt: `${data.year}-06-18T10:30:00.000Z`,
-		},
-	]
 }

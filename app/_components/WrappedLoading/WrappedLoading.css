@@ -1,0 +1,125 @@
+.wrapped-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.25rem;
+	box-sizing: border-box;
+	min-height: 100vh;
+	min-height: 100svh;
+	padding: 1.5rem;
+	background: #14151a;
+	color: #f4f4f5;
+	text-align: center;
+}
+
+.wrapped-loading-brand {
+	margin: 0;
+	font-size: 1.3rem;
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+.wrapped-loading-brand-dot {
+	color: #f9c74f;
+}
+
+.wrapped-loading-caption {
+	margin: 0;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: rgba(244, 244, 245, 0.55);
+}
+
+.wrapped-loading-stages {
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+	min-width: min(20rem, 80vw);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-align: left;
+}
+
+.wrapped-loading-stage {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	font-size: 0.95rem;
+	color: rgba(244, 244, 245, 0.4);
+	transition: color 0.25s;
+}
+
+.wrapped-loading-stage.is-active {
+	color: #f4f4f5;
+}
+
+.wrapped-loading-stage.is-done {
+	color: rgba(244, 244, 245, 0.65);
+}
+
+.wrapped-loading-stage-mark {
+	display: grid;
+	place-items: center;
+	width: 1.35rem;
+	height: 1.35rem;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+}
+
+.wrapped-loading-stage.is-active .wrapped-loading-stage-mark {
+	border-color: #f9c74f;
+	box-shadow: 0 0 0 4px rgba(249, 199, 79, 0.15);
+}
+
+.wrapped-loading-stage.is-active .wrapped-loading-stage-mark::after {
+	content: '';
+	width: 0.45rem;
+	height: 0.45rem;
+	border-radius: 50%;
+	background: #f9c74f;
+	animation: wrapped-loading-pulse 1.1s ease-in-out infinite;
+}
+
+.wrapped-loading-stage.is-done .wrapped-loading-stage-mark {
+	border-color: rgba(163, 230, 53, 0.5);
+	background: rgba(163, 230, 53, 0.15);
+	color: #a3e635;
+}
+
+@keyframes wrapped-loading-pulse {
+	50% {
+		opacity: 0.35;
+		transform: scale(0.8);
+	}
+}
+
+.wrapped-loading-bar {
+	width: min(20rem, 80vw);
+	height: 0.3rem;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.1);
+	overflow: hidden;
+}
+
+.wrapped-loading-bar > span {
+	display: block;
+	width: 40%;
+	height: 100%;
+	border-radius: inherit;
+	background: #f9c74f;
+	animation: wrapped-loading-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes wrapped-loading-slide {
+	from {
+		transform: translateX(-100%);
+	}
+
+	to {
+		transform: translateX(350%);
+	}
+}

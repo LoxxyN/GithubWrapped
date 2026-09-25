@@ -39,9 +39,30 @@ export interface WrappedStats {
 	streak: number
 	streakStart: string | null
 	streakEnd: string | null
-	chronotype: Chronotype
-	nightCommitPercentage: number
+	chronotype: Chronotype | null
+	nightCommitPercentage: number | null
 	topRepository: RepositoryStat
+}
+
+export interface ContributionDay {
+	date: string
+	count: number
+}
+
+export interface RepositoryContribution {
+	name: string
+	commits: number
+	stars: number
+	language: string | null
+}
+
+export interface ContributionSnapshot {
+	totalCommits: number
+	totalRepositories: number
+	followers: number
+	days: ContributionDay[]
+	repositories: RepositoryContribution[]
+	commitHours: number[] | null
 }
 
 export interface WrappedData {
@@ -50,28 +71,4 @@ export interface WrappedData {
 	stats: WrappedStats
 	source: WrappedSource
 	generatedAt: string
-}
-
-export interface GitHubProfile {
-	login: string
-	name: string | null
-	avatarUrl: string | null
-	followers: number
-	publicRepos: number
-}
-
-export interface GitHubEvent {
-	id: string
-	type: string
-	createdAt: string
-	repository: string
-	commits: number
-}
-
-export interface GitHubRepository {
-	name: string
-	stars: number
-	language: string
-	fork: boolean
-	pushedAt: string | null
 }

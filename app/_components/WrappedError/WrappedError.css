@@ -1,0 +1,82 @@
+.wrapped-error {
+	display: grid;
+	place-items: center;
+	box-sizing: border-box;
+	min-height: 100vh;
+	min-height: 100svh;
+	padding: clamp(1.25rem, 4vw, 2.5rem);
+	background: #14151a;
+	color: #f4f4f5;
+}
+
+.wrapped-error-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	box-sizing: border-box;
+	max-width: 34rem;
+	padding: clamp(1.75rem, 4vw, 2.5rem);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 28px;
+	background: rgba(255, 255, 255, 0.05);
+	text-align: center;
+}
+
+.wrapped-error-icon {
+	display: grid;
+	place-items: center;
+	width: 4rem;
+	aspect-ratio: 1;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 22px;
+	background: rgba(255, 255, 255, 0.07);
+	color: #ff8b8b;
+}
+
+.wrapped-error-overline {
+	margin: 0;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: rgba(244, 244, 245, 0.55);
+}
+
+.wrapped-error-title {
+	margin: 0;
+	font-size: clamp(1.6rem, 4vw, 2.4rem);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+.wrapped-error-description {
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.6;
+	color: rgba(244, 244, 245, 0.68);
+}
+
+.wrapped-error-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+	padding: 0.85rem 1.5rem;
+	border-radius: 999px;
+	background: #f4f4f5;
+	color: #14151a;
+	font-size: 0.95rem;
+	font-weight: 700;
+	text-decoration: none;
+	transition: transform 0.18s;
+}
+
+.wrapped-error-back:hover {
+	transform: translateY(-2px);
+}
+
+.wrapped-error-back:focus-visible {
+	outline: 2px solid #f9c74f;
+	outline-offset: 2px;
+}

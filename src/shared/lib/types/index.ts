@@ -1,10 +1,10 @@
 export type {
 	Chronotype,
-	GitHubEvent,
-	GitHubProfile,
-	GitHubRepository,
+	ContributionDay,
+	ContributionSnapshot,
 	LanguageStat,
 	MonthStat,
+	RepositoryContribution,
 	RepositoryStat,
 	WrappedData,
 	WrappedProfile,

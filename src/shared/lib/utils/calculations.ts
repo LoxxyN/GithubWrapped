@@ -1,7 +1,6 @@
 import type {
-	GitHubEvent,
-	GitHubProfile,
-	GitHubRepository,
+	Chronotype,
+	ContributionSnapshot,
 	LanguageStat,
 	WrappedStats,
 } from '../types/wrapped'
@@ -32,7 +31,7 @@ const languageColors: Record<string, string> = {
 	'Other': '#a3a3a3',
 }
 
-const getDayKey = (date: Date) => date.toISOString().slice(0, 10)
+const dayInMilliseconds = 86_400_000
 
 const getMonthLabel = (month: number) => monthLabels[month] ?? 'месяц'
 
@@ -46,94 +45,33 @@ const getTopLanguage = (languages: LanguageStat[]) =>
 		color: getLanguageColor('Other'),
 	}
 
-export const calculateWrappedStats = (
-	profile: GitHubProfile,
-	events: GitHubEvent[],
-	repositories: GitHubRepository[],
-): WrappedStats => {
-	const repositoryByName = new Map(
-		repositories.map((repository) => [repository.name, repository]),
-	)
-	const commitsByRepository = new Map<string, number>()
-	const commitsByLanguage = new Map<string, number>()
-	const months = Array.from({ length: 12 }, (_, month) => ({
-		month,
-		label: getMonthLabel(month),
-		commits: 0,
-	}))
-	const commitDays = new Set<string>()
-	let totalCommits = 0
-	let nightCommits = 0
+const parseDayTimestamp = (date: string) =>
+	Date.parse(`${date}T00:00:00.000Z`)
 
-	for (const event of events) {
-		const commitCount = Math.max(0, event.commits)
-		if (commitCount === 0) {
-			continue
-		}
-
-		const date = new Date(event.createdAt)
-		if (Number.isNaN(date.getTime())) {
-			continue
-		}
-
-		totalCommits += commitCount
-		months[date.getUTCMonth()].commits += commitCount
-		commitsByRepository.set(
-			event.repository,
-			(commitsByRepository.get(event.repository) ?? 0) + commitCount,
-		)
-
-		const repositoryLanguage =
-			repositoryByName.get(event.repository)?.language ?? 'Other'
-		commitsByLanguage.set(
-			repositoryLanguage,
-			(commitsByLanguage.get(repositoryLanguage) ?? 0) + commitCount,
-		)
-
-		if (date.getUTCHours() >= 20 || date.getUTCHours() < 6) {
-			nightCommits += commitCount
-		}
-
-		const dayKey = getDayKey(date)
-		commitDays.add(dayKey)
+const calculateChronotype = (
+	hours: number[] | null,
+): { chronotype: Chronotype; nightCommitPercentage: number } | null => {
+	if (!hours) {
+		return null
 	}
 
-	const languages = Array.from(commitsByLanguage.entries())
-		.map(([name, commits]) => ({
-			name,
-			commits,
-			percentage: totalCommits === 0 ? 0 : Math.round((commits / totalCommits) * 100),
-			color: getLanguageColor(name),
-		}))
-		.sort((left, right) => right.commits - left.commits)
-
-	const activeMonth = months.reduce((current, month) =>
-		month.commits > current.commits ? month : current,
-	)
-
-	const uniqueDays = Array.from(commitDays).sort()
-	let streak = 0
-	let streakStart: string | null = null
-	let streakEnd: string | null = null
-
-	for (let index = 0; index < uniqueDays.length; index += 1) {
-		const current = new Date(`${uniqueDays[index]}T00:00:00.000Z`)
-		const previous = index > 0
-			? new Date(`${uniqueDays[index - 1]}T00:00:00.000Z`)
-			: null
-		const isConsecutive =
-			previous !== null && current.getTime() - previous.getTime() === 86_400_000
-
-		if (isConsecutive) {
-			streak += 1
-		} else {
-			streak = 1
-			streakStart = uniqueDays[index]
-		}
-
-		streakEnd = uniqueDays[index]
+	const total = hours.reduce((sum, count) => sum + count, 0)
+	if (total === 0) {
+		return null
 	}
 
+	const night =
+		hours.slice(20).reduce((sum, count) => sum + count, 0) +
+		hours.slice(0, 6).reduce((sum, count) => sum + count, 0)
+	const nightCommitPercentage = Math.round((night / total) * 100)
+
+	return {
+		chronotype: nightCommitPercentage >= 50 ? 'night-owl' : 'early-bird',
+		nightCommitPercentage,
+	}
+}
+
+const calculateLongestStreak = (uniqueDays: string[]) => {
 	let longestStreak = 0
 	let currentStreak = 0
 	let currentStart: string | null = null
@@ -141,12 +79,11 @@ export const calculateWrappedStats = (
 	let longestEnd: string | null = null
 
 	for (let index = 0; index < uniqueDays.length; index += 1) {
-		const current = new Date(`${uniqueDays[index]}T00:00:00.000Z`)
-		const previous = index > 0
-			? new Date(`${uniqueDays[index - 1]}T00:00:00.000Z`)
-			: null
+		const previous = index > 0 ? uniqueDays[index - 1] : null
 		const isConsecutive =
-			previous !== null && current.getTime() - previous.getTime() === 86_400_000
+			previous !== null &&
+			parseDayTimestamp(uniqueDays[index]) - parseDayTimestamp(previous) ===
+				dayInMilliseconds
 
 		if (isConsecutive) {
 			currentStreak += 1
@@ -162,33 +99,77 @@ export const calculateWrappedStats = (
 		}
 	}
 
-	if (longestStreak > 0) {
-		streak = longestStreak
-		streakStart = longestStart
-		streakEnd = longestEnd
+	return {
+		streak: longestStreak,
+		streakStart: longestStart,
+		streakEnd: longestEnd,
+	}
+}
+
+export const calculateWrappedStats = (
+	snapshot: ContributionSnapshot,
+): WrappedStats => {
+	const { totalCommits, totalRepositories, followers, days, repositories, commitHours } =
+		snapshot
+
+	const months = Array.from({ length: 12 }, (_, month) => ({
+		month,
+		label: getMonthLabel(month),
+		commits: 0,
+	}))
+	const commitsByLanguage = new Map<string, number>()
+	const activeDays = new Set<string>()
+
+	for (const day of days) {
+		if (day.count <= 0) {
+			continue
+		}
+
+		const monthIndex = Number(day.date.slice(5, 7)) - 1
+		if (monthIndex >= 0 && monthIndex < 12) {
+			months[monthIndex].commits += day.count
+		}
+		activeDays.add(day.date)
 	}
 
-	const topRepository = Array.from(commitsByRepository.entries())
-		.map(([name, commits]) => {
-			const repository = repositoryByName.get(name)
-			return {
-				name,
-				commits,
-				stars: repository?.stars ?? 0,
-				language: repository?.language ?? 'Other',
-			}
-		})
-		.sort((left, right) => right.commits - left.commits || right.stars - left.stars)[0] ?? {
-			name: 'Пока нет данных',
-			commits: 0,
-			stars: 0,
-			language: 'Other',
-		}
+	for (const repository of repositories) {
+		const language = repository.language ?? 'Other'
+		commitsByLanguage.set(
+			language,
+			(commitsByLanguage.get(language) ?? 0) + repository.commits,
+		)
+	}
+
+	const languages = Array.from(commitsByLanguage.entries())
+		.map(([name, commits]) => ({
+			name,
+			commits,
+			percentage: totalCommits === 0 ? 0 : Math.round((commits / totalCommits) * 100),
+			color: getLanguageColor(name),
+		}))
+		.sort((left, right) => right.commits - left.commits)
+
+	const activeMonth = months.reduce((current, month) =>
+		month.commits > current.commits ? month : current,
+	)
+
+	const { streak, streakStart, streakEnd } = calculateLongestStreak(
+		Array.from(activeDays).sort(),
+	)
+
+	const topRepository =
+		repositories
+			.slice()
+			.sort(
+				(left, right) => right.commits - left.commits || right.stars - left.stars,
+			)[0] ?? null
+
+	const chronotypeData = calculateChronotype(commitHours)
 
 	return {
 		totalCommits,
-		totalRepositories: repositories.filter((repository) => !repository.fork).length,
-		followers: profile.followers,
+		totalRepositories,
+		followers,
 		languages,
 		topLanguage: getTopLanguage(languages),
 		months,
@@ -196,12 +177,20 @@ export const calculateWrappedStats = (
 		streak,
 		streakStart,
 		streakEnd,
-		chronotype: totalCommits > 0 && nightCommits / totalCommits >= 0.5
-			? 'night-owl'
-			: 'early-bird',
-		nightCommitPercentage: totalCommits === 0
-			? 0
-			: Math.round((nightCommits / totalCommits) * 100),
-		topRepository,
+		chronotype: chronotypeData?.chronotype ?? null,
+		nightCommitPercentage: chronotypeData?.nightCommitPercentage ?? null,
+		topRepository: topRepository
+			? {
+					name: topRepository.name,
+					commits: topRepository.commits,
+					stars: topRepository.stars,
+					language: topRepository.language ?? 'Other',
+				}
+			: {
+					name: 'Пока нет данных',
+					commits: 0,
+					stars: 0,
+					language: 'Other',
+				},
 	}
 }

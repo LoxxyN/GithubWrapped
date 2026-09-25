@@ -11,10 +11,11 @@ import {
 	Star,
 	Sun,
 } from 'lucide-react'
-import { type CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { AnimatedNumber } from './AnimatedNumber'
 import { StatPill } from './StatPill'
 import { StoryAvatar } from './StoryAvatar'
+import { drawWrappedCard } from './drawWrappedCard'
 
 export type StoryKind =
 	| 'intro'
@@ -26,24 +27,40 @@ export type StoryKind =
 	| 'repository'
 	| 'summary'
 
-export type ShareState = 'idle' | 'copied' | 'shared' | 'error'
+type ShareState = 'idle' | 'copied' | 'shared' | 'error'
 
 interface StoryContentProps {
 	kind: StoryKind
 	data: WrappedData
-	shareState: ShareState
-	onDownload: () => void
-	onShare: () => void
 }
 
-export const StoryContent = ({
-	kind,
-	data,
-	shareState,
-	onDownload,
-	onShare,
-}: StoryContentProps) => {
+export const StoryContent = ({ kind, data }: StoryContentProps) => {
 	const { profile, stats, year } = data
+	const [shareState, setShareState] = useState<ShareState>('idle')
+
+	const handleDownload = () => {
+		drawWrappedCard(data)
+	}
+
+	const handleShare = async () => {
+		const shareData = {
+			title: `${data.profile.username} — GitHub Wrapped ${data.year}`,
+			text: `Мой GitHub Wrapped ${data.year}: ${formatNumber(data.stats.totalCommits)} коммитов и ${data.stats.streak} дней streak.`,
+			url: window.location.href,
+		}
+
+		try {
+			if (navigator.share) {
+				await navigator.share(shareData)
+				setShareState('shared')
+				return
+			}
+			await navigator.clipboard.writeText(window.location.href)
+			setShareState('copied')
+		} catch {
+			setShareState('error')
+		}
+	}
 
 	if (kind === 'intro') {
 		return (
@@ -226,6 +243,20 @@ export const StoryContent = ({
 	}
 
 	if (kind === 'chronotype') {
+		if (stats.chronotype === null || stats.nightCommitPercentage === null) {
+			return (
+				<div className='story-layout story-layout-centered'>
+					<div className='story-copy story-copy-center'>
+						<p className='story-overline'>05 / Твой темп</p>
+						<h2>Когда ты пишешь код</h2>
+						<p className='story-description'>
+							Слишком мало данных за {year}, чтобы определить твой хронотип.
+						</p>
+					</div>
+				</div>
+			)
+		}
+
 		const isNightOwl = stats.chronotype === 'night-owl'
 		return (
 			<div
@@ -330,12 +361,12 @@ export const StoryContent = ({
 				<button
 					className='story-action story-action-primary'
 					type='button'
-					onClick={onDownload}
+					onClick={handleDownload}
 				>
 					<Download aria-hidden='true' size={18} strokeWidth={1.8} /> Скачать
 					PNG
 				</button>
-				<button className='story-action' type='button' onClick={onShare}>
+				<button className='story-action' type='button' onClick={handleShare}>
 					{shareState === 'copied' || shareState === 'shared' ? (
 						<Check aria-hidden='true' size={18} strokeWidth={1.8} />
 					) : (
