@@ -1,0 +1,127 @@
+.landing-form-shell {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+	width: min(34rem, 100%);
+}
+
+.landing-form {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.7rem;
+}
+
+.landing-input-wrap {
+	display: flex;
+	flex: 1 1 15rem;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.35rem 0.5rem 0.35rem 1.1rem;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 999px;
+	background: rgba(16, 5, 8, 0.42);
+	backdrop-filter: blur(10px);
+	transition:
+		border-color 0.2s,
+		background 0.2s;
+}
+
+.landing-input-wrap:focus-within {
+	border-color: #ffffff;
+	background: rgba(16, 5, 8, 0.58);
+}
+
+.landing-input-wrap:has(input[aria-invalid='true']) {
+	border-color: #ffb4b4;
+}
+
+.landing-input-prefix {
+	color: rgba(255, 255, 255, 0.55);
+	font-weight: 700;
+}
+
+.landing-input-wrap input {
+	flex: 1;
+	min-width: 0;
+	padding: 0.8rem 0.5rem 0.8rem 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: #ffffff;
+	font-size: 1rem;
+}
+
+.landing-input-wrap input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.landing-submit {
+	width: 100%;
+}
+
+.landing-submit__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.55rem;
+	padding: 1rem 1.6rem;
+	border: 0;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #160d10;
+	font-size: 1rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		transform 0.18s,
+		box-shadow 0.18s;
+}
+
+.landing-submit__button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+}
+
+.landing-submit__button:active {
+	transform: translateY(0);
+}
+
+.landing-suggestions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.85rem;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.landing-suggestions button {
+	padding: 0.3rem 0.75rem;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 999px;
+	background: rgba(16, 5, 8, 0.3);
+	color: #ffffff;
+	font-size: 0.85rem;
+	cursor: pointer;
+	transition:
+		background 0.18s,
+		border-color 0.18s;
+}
+
+.landing-suggestions button:hover {
+	border-color: rgba(255, 255, 255, 0.55);
+	background: rgba(255, 255, 255, 0.16);
+}
+
+.landing-error {
+	margin: 0 20px;
+	color: #ffd9d9;
+	font-size: 0.9rem;
+}
+
+.landing-form button:focus-visible,
+.landing-suggestions button:focus-visible {
+	outline: 2px solid #ffffff;
+	outline-offset: 2px;
+}

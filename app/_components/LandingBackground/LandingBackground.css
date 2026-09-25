@@ -1,0 +1,25 @@
+.landing-background {
+	position: relative;
+	width: 100%;
+	min-height: 100vh;
+	min-height: 100svh;
+	background: #7f1d2c;
+}
+
+.landing-background-canvas {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+}
+
+.landing-background-content {
+	position: relative;
+	z-index: 10;
+	min-height: 100vh;
+	min-height: 100svh;
+	background: linear-gradient(
+		180deg,
+		rgba(20, 7, 10, 0.4),
+		rgba(20, 7, 10, 0.62)
+	);
+}
