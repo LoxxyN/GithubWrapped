@@ -27,13 +27,12 @@ export const Landing = () => {
 
 				<footer className='landing-footer'>
 					<span>
-						Автор: <Link href='https://github.com/LoxxyN'>@LoxxyN</Link>
+						<Link href='https://github.com/LoxxyN'>Автор: @LoxxyN</Link>
 					</span>
 					<span>Стек: Next.js · TypeScript · Tailwind CSS</span>
 					<span>
-						Исходники:{' '}
 						<Link href='https://github.com/LoxxyN/GithubWrapped'>
-							GithubWrapped
+							Исходники: GithubWrapped
 						</Link>
 					</span>
 				</footer>

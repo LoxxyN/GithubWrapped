@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react'
-import Link from 'next/link'
+import type { WrappedDataErrorCode } from '@/src/shared/lib/api'
 import {
 	ArrowLeft,
 	CircleAlert,
@@ -8,7 +7,8 @@ import {
 	UserX,
 	WifiOff,
 } from 'lucide-react'
-import type { WrappedDataErrorCode } from '@/src/shared/lib/api'
+import Link from 'next/link'
+import type { ReactNode } from 'react'
 import './WrappedError.css'
 
 interface WrappedErrorProps {
@@ -26,7 +26,7 @@ const errorContentByCode: Record<WrappedDataErrorCode, ErrorContent> = {
 	'not-found': {
 		icon: <UserX aria-hidden='true' size={30} strokeWidth={1.8} />,
 		title: 'Пользователь не найден',
-		description: (username) =>
+		description: username =>
 			`@${username} — такого аккаунта нет на GitHub. Проверь, как написано имя.`,
 	},
 	'rate-limit': {
@@ -36,9 +36,11 @@ const errorContentByCode: Record<WrappedDataErrorCode, ErrorContent> = {
 			'GitHub ограничил количество запросов. Попробуй обновить страницу через пару минут.',
 	},
 	empty: {
-		icon: <GitCommitHorizontal aria-hidden='true' size={30} strokeWidth={1.8} />,
+		icon: (
+			<GitCommitHorizontal aria-hidden='true' size={30} strokeWidth={1.8} />
+		),
 		title: 'Год без публичных коммитов',
-		description: (username) =>
+		description: username =>
 			`У @${username} нет публичных контрибьюшенов за этот год — Wrapped пока нечего показывать.`,
 	},
 	'invalid-username': {

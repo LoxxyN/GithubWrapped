@@ -1,10 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import Link from 'next/link'
-import Stories from 'react-insta-stories'
-import { Logo } from '@shared/ui'
 import type { WrappedData } from '@/src/shared/lib/types'
+import { Logo } from '@shared/ui'
+import Link from 'next/link'
+import { useMemo, useState } from 'react'
+import Stories from 'react-insta-stories'
 import { StoryContent, type StoryKind } from './StoryContent'
 import './WrappedExperience.css'
 
@@ -31,13 +31,13 @@ export const WrappedExperience = ({ data }: { data: WrappedData }) => {
 	const visibleStoryMeta = useMemo(
 		() =>
 			data.stats.chronotype === null
-				? storyMeta.filter((story) => story.kind !== 'chronotype')
+				? storyMeta.filter(story => story.kind !== 'chronotype')
 				: storyMeta,
 		[data.stats.chronotype],
 	)
 	const stories = useMemo(
 		() =>
-			visibleStoryMeta.map((story) => ({
+			visibleStoryMeta.map(story => ({
 				content: () => <StoryContent kind={story.kind} data={data} />,
 			})),
 		[visibleStoryMeta, data],
@@ -72,7 +72,9 @@ export const WrappedExperience = ({ data }: { data: WrappedData }) => {
 			</section>
 
 			<footer className='wrapped-footer'>
-				<span>{data.profile.displayName} · {data.year}</span>
+				<span>
+					{data.profile.displayName} · {data.year}
+				</span>
 				<span>Сделано из кода и любопытства</span>
 			</footer>
 		</main>

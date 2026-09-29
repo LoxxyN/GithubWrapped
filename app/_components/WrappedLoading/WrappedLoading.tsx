@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Logo } from '@shared/ui'
 import { Check } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import './WrappedLoading.css'
 
 const stages = ['Считаем коммиты…', 'Смотрим языки…', 'Ищем streak…']
@@ -11,16 +12,14 @@ export const WrappedLoading = () => {
 
 	useEffect(() => {
 		const timer = window.setInterval(() => {
-			setStage((value) => Math.min(value + 1, stages.length - 1))
+			setStage(value => Math.min(value + 1, stages.length - 1))
 		}, 1500)
 		return () => window.clearInterval(timer)
 	}, [])
 
 	return (
 		<main className='wrapped-loading'>
-			<p className='wrapped-loading-brand'>
-				wrapped<span className='wrapped-loading-brand-dot'>.</span>
-			</p>
+			<Logo />
 			<p className='wrapped-loading-caption'>Готовим твой год</p>
 			<ul className='wrapped-loading-stages'>
 				{stages.map((label, index) => (

@@ -577,16 +577,6 @@
 	outline-offset: 2px;
 }
 
-.story-action-primary {
-	border-color: transparent;
-	background: var(--story-text);
-	color: var(--story-bg);
-}
-
-.story-action-primary:hover {
-	background: #ffffff;
-}
-
 .wrapped-footer {
 	position: relative;
 	z-index: 2;

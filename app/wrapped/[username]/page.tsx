@@ -1,12 +1,4 @@
-import { getWrappedData, WrappedDataError } from '@/src/shared/lib/api'
-import type { WrappedDataErrorCode } from '@/src/shared/lib/api'
-import type { WrappedData } from '@/src/shared/lib/types'
-import { WrappedError } from '@/app/_components/WrappedError'
-import { WrappedExperience } from '@/app/_components/WrappedExperience'
-
-type Outcome =
-	| { data: WrappedData }
-	| { code: WrappedDataErrorCode }
+import { WrappedDataLoader } from '@/app/_components/WrappedDataLoader'
 
 const decodeUsername = (value: string) => {
 	try {
@@ -25,22 +17,8 @@ export default async function WrappedPage({
 	const decodedUsername = decodeUsername(username)
 
 	if (decodedUsername === null) {
-		return <WrappedError code='invalid-username' username={username} />
+		return <WrappedDataLoader username={username} />
 	}
 
-	const outcome: Outcome = await getWrappedData(decodedUsername).then(
-		(data): Outcome => ({ data }),
-		(error): Outcome => {
-			if (error instanceof WrappedDataError) {
-				return { code: error.code }
-			}
-			throw error
-		},
-	)
-
-	return 'data' in outcome ? (
-		<WrappedExperience data={outcome.data} />
-	) : (
-		<WrappedError code={outcome.code} username={decodedUsername} />
-	)
+	return <WrappedDataLoader key={decodedUsername} username={decodedUsername} />
 }

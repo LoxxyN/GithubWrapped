@@ -1,4 +1,13 @@
 import { getWrappedData, WrappedDataError } from '@shared/lib/api'
+import type { WrappedDataErrorCode } from '@shared/lib/api'
+
+const statusByErrorCode: Record<WrappedDataErrorCode, number> = {
+	'invalid-username': 400,
+	'not-found': 404,
+	'rate-limit': 429,
+	empty: 422,
+	unavailable: 503,
+}
 
 export async function GET(
 	_request: Request,
@@ -19,15 +28,10 @@ export async function GET(
 			error instanceof WrappedDataError
 				? error.message
 				: 'Unable to load GitHub data'
-		const status =
-			code === 'not-found'
-				? 404
-				: code === 'rate-limit'
-					? 429
-					: code === 'invalid-username'
-						? 400
-						: 404
 
-		return Response.json({ error: { code, message } }, { status })
+		return Response.json(
+			{ error: { code, message } },
+			{ status: statusByErrorCode[code] },
+		)
 	}
 }
