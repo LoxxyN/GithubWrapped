@@ -1,4 +1,4 @@
-import { Logo } from '@shared/ui'
+import { Logo, SplitText } from '@shared/ui'
 import Link from 'next/link'
 import { LandingBackground } from '../LandingBackground'
 import { LandingForm } from '../LandingForm'
@@ -17,7 +17,21 @@ export const Landing = () => {
 
 				<main className='landing-hero'>
 					<p className='landing-eyebrow'>GitHub Wrapped {year}</p>
-					<h1 className='landing-title'>Узнать статистику</h1>
+
+					<SplitText
+						tag='h1'
+						text='Узнать статистику'
+						className='text-6xl font-extrabold text-center'
+						delay={200}
+						duration={1}
+						ease='power3.out'
+						splitType='words'
+						from={{ opacity: 0, y: 40 }}
+						to={{ opacity: 1, y: 0 }}
+						threshold={0.1}
+						rootMargin='-100px'
+						textAlign='center'
+					/>
 					<p className='landing-subtitle'>
 						Введи GitHub username — получи свой год одной историей: коммиты,
 						языки и streak.
