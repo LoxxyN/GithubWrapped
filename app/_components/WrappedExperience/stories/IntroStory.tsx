@@ -20,7 +20,7 @@ export const IntroStory = ({ data, headline }: StorySlideProps) => (
 				/>
 			</h1>
 			<p className='story-description'>
-				Личная история твоих коммитов, репозиториев и маленьких побед.
+				Личная история твоих вкладов, репозиториев и маленьких побед.
 			</p>
 		</div>
 	</div>

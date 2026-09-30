@@ -28,7 +28,7 @@ interface StoryContentProps {
 
 export const StoryContent = ({ kind, data }: StoryContentProps) => {
 	const headline = useStoryPhrase(kind)
-	const { share, shareState } = useShare(data)
+	const { share, shareState } = useShare()
 	const storyProps = { data, headline }
 
 	switch (kind) {

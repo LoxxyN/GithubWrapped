@@ -4,7 +4,10 @@ import type { StorySlideProps } from './StorySlide.type'
 
 export const MonthStory = ({ data, headline }: StorySlideProps) => {
 	const { activeMonth, months } = data.stats
-	const maxCommits = Math.max(...months.map(month => month.commits), 1)
+	const maxContributions = Math.max(
+		...months.map(month => month.contributions),
+		1,
+	)
 
 	return (
 		<div className='story-layout story-layout-split'>
@@ -21,8 +24,8 @@ export const MonthStory = ({ data, headline }: StorySlideProps) => {
 			<div className='story-stat-panel month-panel'>
 				<div className='month-highlight'>
 					<span>{capitalize(activeMonth.label)}</span>
-					<strong>{formatNumber(activeMonth.commits)}</strong>
-					<small>коммитов</small>
+					<strong>{formatNumber(activeMonth.contributions)}</strong>
+					<small>вкладов</small>
 				</div>
 				<div className='month-chart' aria-label='Активность по месяцам'>
 					{months.map(month => (
@@ -30,7 +33,7 @@ export const MonthStory = ({ data, headline }: StorySlideProps) => {
 							<span
 								className={month.month === activeMonth.month ? 'is-active' : ''}
 								style={{
-									height: `${Math.max(8, (month.commits / maxCommits) * 100)}%`,
+									height: `${Math.max(8, (month.contributions / maxContributions) * 100)}%`,
 								}}
 							/>
 							<small>{month.label.slice(0, 3)}</small>

@@ -39,7 +39,7 @@ const errorContentByCode: Record<WrappedDataErrorCode, ErrorContent> = {
 		icon: (
 			<GitCommitHorizontal aria-hidden='true' size={30} strokeWidth={1.8} />
 		),
-		title: 'Год без публичных коммитов',
+		title: 'Год без публичных вкладов',
 		description: username =>
 			`У @${username} нет публичных контрибьюшенов за этот год — Wrapped пока нечего показывать.`,
 	},

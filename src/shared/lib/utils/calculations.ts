@@ -109,13 +109,19 @@ const calculateLongestStreak = (uniqueDays: string[]) => {
 export const calculateWrappedStats = (
 	snapshot: ContributionSnapshot,
 ): WrappedStats => {
-	const { totalCommits, totalRepositories, followers, days, repositories, commitHours } =
-		snapshot
+	const {
+		totalContributions,
+		totalRepositories,
+		followers,
+		days,
+		repositories,
+		commitHours,
+	} = snapshot
 
 	const months = Array.from({ length: 12 }, (_, month) => ({
 		month,
 		label: getMonthLabel(month),
-		commits: 0,
+		contributions: 0,
 	}))
 	const commitsByLanguage = new Map<string, number>()
 	const activeDays = new Set<string>()
@@ -127,7 +133,7 @@ export const calculateWrappedStats = (
 
 		const monthIndex = Number(day.date.slice(5, 7)) - 1
 		if (monthIndex >= 0 && monthIndex < 12) {
-			months[monthIndex].commits += day.count
+			months[monthIndex].contributions += day.count
 		}
 		activeDays.add(day.date)
 	}
@@ -140,17 +146,25 @@ export const calculateWrappedStats = (
 		)
 	}
 
+	const totalRepositoryCommits = repositories.reduce(
+		(sum, repository) => sum + repository.commits,
+		0,
+	)
+
 	const languages = Array.from(commitsByLanguage.entries())
 		.map(([name, commits]) => ({
 			name,
 			commits,
-			percentage: totalCommits === 0 ? 0 : Math.round((commits / totalCommits) * 100),
+			percentage:
+				totalRepositoryCommits === 0
+					? 0
+					: Math.round((commits / totalRepositoryCommits) * 100),
 			color: getLanguageColor(name),
 		}))
 		.sort((left, right) => right.commits - left.commits)
 
 	const activeMonth = months.reduce((current, month) =>
-		month.commits > current.commits ? month : current,
+		month.contributions > current.contributions ? month : current,
 	)
 
 	const { streak, streakStart, streakEnd } = calculateLongestStreak(
@@ -167,7 +181,7 @@ export const calculateWrappedStats = (
 	const chronotypeData = calculateChronotype(commitHours)
 
 	return {
-		totalCommits,
+		totalContributions,
 		totalRepositories,
 		followers,
 		languages,

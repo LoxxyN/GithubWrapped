@@ -9,11 +9,11 @@ export const storyPhrases: Record<StoryKind, readonly string[]> = {
 		'Смотри, что\nвышло у {username}',
 	],
 	commits: [
-		'Ты сделал\n{commits}\nкоммитов',
-		'{commits}\nкоммитов за год',
-		'Твой год —\n{commits}\nкоммитов',
-		'За год ты\nсделал {commits}\nкоммитов',
-		'{commits} —\nстолько твоих\nкоммитов',
+		'За год ты внёс\n{contributions}',
+		'{contributions}\nв этом году',
+		'Твой итог —\n{contributions}',
+		'Год в цифрах:\n{contributions}',
+		'{contributions} —\nэто твой ритм',
 	],
 	language: [
 		'Ты практически\nговоришь на\n{language}',

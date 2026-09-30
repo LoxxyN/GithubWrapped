@@ -13,7 +13,8 @@ const toSnapshot = (
 	const { contributionsCollection } = user
 
 	return {
-		totalCommits: contributionsCollection.totalCommitContributions,
+		totalContributions:
+			contributionsCollection.contributionCalendar.totalContributions,
 		totalRepositories: user.repositories.totalCount,
 		followers: user.followers.totalCount,
 		days: contributionsCollection.contributionCalendar.weeks.flatMap(week =>
@@ -65,7 +66,7 @@ export const getWrappedData = async (
 
 	const stats = calculateWrappedStats(toSnapshot(user, commitHours))
 
-	if (stats.totalCommits === 0) {
+	if (stats.totalContributions === 0) {
 		throw new WrappedDataError('empty', 'No public contributions found')
 	}
 

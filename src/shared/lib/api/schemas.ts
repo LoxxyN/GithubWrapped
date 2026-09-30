@@ -18,8 +18,9 @@ export const contributionsQuery = /* GraphQL */ `
 			}
 			contributionsCollection(from: $from, to: $to) {
 				totalCommitContributions
-				contributionCalendar {
-					weeks {
+			contributionCalendar {
+				totalContributions
+				weeks {
 						contributionDays {
 							date
 							contributionCount
@@ -56,6 +57,7 @@ const userSchema = z.object({
 	contributionsCollection: z.object({
 		totalCommitContributions: z.number().int().nonnegative(),
 		contributionCalendar: z.object({
+			totalContributions: z.number().int().nonnegative(),
 			weeks: z.array(
 				z.object({
 					contributionDays: z.array(

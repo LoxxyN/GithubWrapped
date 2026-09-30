@@ -1,4 +1,5 @@
-import { Check, Share2 } from 'lucide-react'
+import { ArrowLeft, Check, Share2 } from 'lucide-react'
+import Link from 'next/link'
 import { AnimatedNumber } from '../AnimatedNumber'
 import { Headline } from '../Headline'
 import type { ShareState } from '../hooks/useShare'
@@ -24,10 +25,10 @@ export const SummaryStory = ({
 		</div>
 		<div className='summary-grid'>
 			<div>
-				<strong>
-					<AnimatedNumber value={data.stats.totalCommits} />
-				</strong>
-				<span>коммитов</span>
+					<strong>
+						<AnimatedNumber value={data.stats.totalContributions} />
+					</strong>
+					<span>вкладов</span>
 			</div>
 			<div>
 				<strong>{data.stats.topLanguage.name}</strong>
@@ -44,17 +45,16 @@ export const SummaryStory = ({
 		</div>
 		<div className='summary-actions'>
 			<button className='story-action' type='button' onClick={share}>
-				{shareState === 'copied' || shareState === 'shared' ? (
+				{shareState === 'copied' ? (
 					<Check aria-hidden='true' size={18} strokeWidth={1.8} />
 				) : (
 					<Share2 aria-hidden='true' size={18} strokeWidth={1.8} />
 				)}
-				{shareState === 'copied'
-					? 'Ссылка скопирована'
-					: shareState === 'shared'
-						? 'Готово'
-						: 'Поделиться'}
+				{shareState === 'copied' ? 'Ссылка скопирована' : 'Поделиться'}
 			</button>
+			<Link className='story-action' href='/'>
+				<ArrowLeft aria-hidden='true' size={18} strokeWidth={1.8} /> На главную
+			</Link>
 		</div>
 	</div>
 )

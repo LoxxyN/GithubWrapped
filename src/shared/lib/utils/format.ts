@@ -24,3 +24,19 @@ export const getInitials = (name: string) =>
 		.map((part) => part[0])
 		.join('')
 		.toUpperCase() || 'GW'
+
+export const pluralizeContributions = (value: number) => {
+	const remainder = Math.abs(value) % 100
+	const lastDigit = remainder % 10
+
+	if (remainder >= 11 && remainder <= 13) {
+		return 'вкладов'
+	}
+	if (lastDigit === 1) {
+		return 'вклад'
+	}
+	if (lastDigit >= 2 && lastDigit <= 4) {
+		return 'вклада'
+	}
+	return 'вкладов'
+}

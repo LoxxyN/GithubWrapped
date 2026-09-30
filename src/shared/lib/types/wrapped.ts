@@ -18,7 +18,7 @@ export interface LanguageStat {
 export interface MonthStat {
 	month: number
 	label: string
-	commits: number
+	contributions: number
 }
 
 export interface RepositoryStat {
@@ -29,7 +29,7 @@ export interface RepositoryStat {
 }
 
 export interface WrappedStats {
-	totalCommits: number
+	totalContributions: number
 	totalRepositories: number
 	followers: number
 	languages: LanguageStat[]
@@ -57,7 +57,7 @@ export interface RepositoryContribution {
 }
 
 export interface ContributionSnapshot {
-	totalCommits: number
+	totalContributions: number
 	totalRepositories: number
 	followers: number
 	days: ContributionDay[]

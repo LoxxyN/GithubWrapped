@@ -3,7 +3,7 @@ import type { WrappedData } from '../types/wrapped'
 const getHash = (value: string) =>
 	value.split('').reduce((hash, character) => hash + character.charCodeAt(0), 0)
 
-const buildLanguages = (totalCommits: number) => {
+const buildLanguages = (totalContributions: number) => {
 	const shares = [
 		{ name: 'TypeScript', ratio: 0.62, color: '#60a5fa' },
 		{ name: 'JavaScript', ratio: 0.19, color: '#facc15' },
@@ -13,7 +13,7 @@ const buildLanguages = (totalCommits: number) => {
 
 	return shares.map((language) => ({
 		name: language.name,
-		commits: Math.round(totalCommits * language.ratio),
+		commits: Math.round(totalContributions * language.ratio),
 		percentage: Math.round(language.ratio * 100),
 		color: language.color,
 	}))
@@ -24,7 +24,7 @@ export const getMockWrappedData = (
 	year = new Date().getUTCFullYear(),
 ): WrappedData => {
 	const seed = getHash(username)
-	const totalCommits = 486 + (seed % 714)
+	const totalContributions = 486 + (seed % 714)
 	const streak = 6 + (seed % 21)
 	const totalRepositories = 18 + (seed % 31)
 	const followers = 84 + (seed % 930)
@@ -46,15 +46,15 @@ export const getMockWrappedData = (
 	const months = Array.from({ length: 12 }, (_, month) => ({
 		month,
 		label: monthLabels[month],
-		commits: month === activeMonthIndex
-			? Math.round(totalCommits * 0.19)
+		contributions: month === activeMonthIndex
+			? Math.round(totalContributions * 0.19)
 			: 18 + ((seed + month * 29) % 74),
 	}))
-	const languages = buildLanguages(totalCommits)
+	const languages = buildLanguages(totalContributions)
 	const topRepositoryName = username.length > 8 ? 'neon-atlas' : 'wrapped-ui'
 	const topRepository = {
 		name: topRepositoryName,
-		commits: Math.round(totalCommits * 0.24),
+		commits: Math.round(totalContributions * 0.24),
 		stars: 38 + (seed % 420),
 		language: 'TypeScript',
 	}
@@ -68,7 +68,7 @@ export const getMockWrappedData = (
 			avatarUrl: null,
 		},
 		stats: {
-			totalCommits,
+			totalContributions,
 			totalRepositories,
 			followers,
 			languages,

@@ -5,7 +5,7 @@ import { Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import './WrappedLoading.css'
 
-const stages = ['Считаем коммиты…', 'Смотрим языки…', 'Ищем streak…']
+const stages = ['Считаем вклады…', 'Смотрим языки…', 'Ищем streak…']
 
 export const WrappedLoading = () => {
 	const [stage, setStage] = useState(0)

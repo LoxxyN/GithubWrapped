@@ -1,26 +1,25 @@
-import type { WrappedData } from '@shared/lib/types'
-import { formatNumber } from '@shared/lib/utils'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export type ShareState = 'idle' | 'copied' | 'shared' | 'error'
+export type ShareState = 'idle' | 'copied' | 'error'
 
-export const useShare = (data: WrappedData) => {
+const resetDelayMilliseconds = 3000
+
+export const useShare = () => {
 	const [shareState, setShareState] = useState<ShareState>('idle')
 
-	const share = async () => {
-		const shareData = {
-			title: `${data.profile.username} - GitHub Wrapped ${data.year}`,
-			text: `Мой GitHub Wrapped ${data.year}: ${formatNumber(data.stats.totalCommits)} коммитов и ${data.stats.streak} дней streak.`,
-			url: window.location.href,
+	useEffect(() => {
+		if (shareState !== 'copied') {
+			return
 		}
 
-		try {
-			if (navigator.share) {
-				await navigator.share(shareData)
-				setShareState('shared')
-				return
-			}
+		const timer = window.setTimeout(() => {
+			setShareState('idle')
+		}, resetDelayMilliseconds)
+		return () => window.clearTimeout(timer)
+	}, [shareState])
 
+	const share = async () => {
+		try {
 			await navigator.clipboard.writeText(window.location.href)
 			setShareState('copied')
 		} catch {
