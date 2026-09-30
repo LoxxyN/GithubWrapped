@@ -21,7 +21,7 @@ export const Landing = () => {
 					<SplitText
 						tag='h1'
 						text='Узнать статистику'
-						className='text-6xl font-extrabold text-center'
+						className='text-6xl font-black text-center'
 						delay={200}
 						duration={1}
 						ease='power3.out'

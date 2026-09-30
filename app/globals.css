@@ -17,3 +17,9 @@ body {
 	color: var(--foreground);
 	font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+h1,
+h2 {
+	font-family: var(--font-unbounded), var(--font-geist-sans), Arial, Helvetica,
+		sans-serif;
+}

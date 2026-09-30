@@ -51,7 +51,11 @@
 	position: absolute;
 	inset: 0;
 	pointer-events: none;
-	background: radial-gradient(65% 50% at 50% 0%, var(--story-accent), transparent 70%);
+	background: radial-gradient(
+		65% 50% at 50% 0%,
+		var(--story-accent),
+		transparent 70%
+	);
 	opacity: 0.14;
 }
 
@@ -159,7 +163,7 @@
 .story-overline {
 	margin: 0;
 	font-size: 0.75rem;
-	font-weight: 700;
+	font-weight: 500;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: var(--story-muted);
@@ -172,7 +176,6 @@
 	font-size: clamp(2rem, 5vw, 3.4rem);
 	font-weight: 800;
 	line-height: 1.05;
-	letter-spacing: -0.03em;
 }
 
 .story-copy h1 em,
@@ -259,7 +262,11 @@
 	flex: 1;
 	height: var(--bar-height);
 	border-radius: 4px 4px 2px 2px;
-	background: linear-gradient(180deg, var(--story-accent), rgba(255, 255, 255, 0.14));
+	background: linear-gradient(
+		180deg,
+		var(--story-accent),
+		rgba(255, 255, 255, 0.14)
+	);
 	transform-origin: bottom;
 	animation: story-bar-grow 0.6s ease both;
 	animation-delay: var(--bar-delay);
@@ -560,7 +567,9 @@
 	font-size: 0.95rem;
 	font-weight: 650;
 	cursor: pointer;
-	transition: transform 0.18s, background 0.18s;
+	transition:
+		transform 0.18s,
+		background 0.18s;
 }
 
 .story-action:hover {
