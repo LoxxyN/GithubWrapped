@@ -13,7 +13,7 @@ export const StreakStory = ({ data, headline }: StorySlideProps) => (
 				focusable='false'
 			>
 				<path
-					d='M-30 40 C 120 240 330 20 510 180'
+					d='M-30 60 C 140 -30 300 70 510 10'
 					stroke='currentColor'
 					strokeWidth='2.5'
 					strokeLinecap='round'
@@ -50,7 +50,7 @@ export const StreakStory = ({ data, headline }: StorySlideProps) => (
 			<h2>
 				<Headline
 					template={headline}
-					variables={{ streak: String(data.stats.streak) }}
+					variables={{ streak: `${data.stats.streak} дней` }}
 				/>
 			</h2>
 			<p className='story-description'>

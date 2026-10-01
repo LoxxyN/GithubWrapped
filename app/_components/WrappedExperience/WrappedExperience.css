@@ -651,6 +651,10 @@
 	z-index: 1;
 }
 
+.story-layout > .summary-actions {
+	z-index: 1002;
+}
+
 .story-deco {
 	position: absolute;
 	inset: 0;
@@ -663,7 +667,7 @@
 	top: 7%;
 	left: -6%;
 	width: 114%;
-	color: var(--bone);
+	color: color-mix(in srgb, var(--bone) 40%, var(--ink));
 	transform: rotate(-2deg);
 }
 
@@ -879,6 +883,10 @@
 	stroke: var(--accent-purple);
 }
 
+.story-streak .story-deco-arcs {
+	width: min(66vw, 660px);
+}
+
 .story-deco-stripes {
 	position: absolute;
 	left: -14px;
@@ -926,6 +934,11 @@
 	clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
 	transform-origin: left;
 	animation: editorial-plate-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.story-intro .stat-pill {
+	align-self: center;
+	font-style: normal;
 }
 
 .story-intro .story-overline {

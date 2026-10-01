@@ -30,10 +30,10 @@ export const storyPhrases: Record<StoryKind, readonly string[]> = {
 		'Твой месяц:\n{month}',
 	],
 	streak: [
-		'{streak} дней\nподряд',
-		'Серия года —\n{streak} дней',
-		'Ты держал\n{streak} дней\nбез остановки',
-		'Без срыва:\n{streak} дней',
+		'{streak}\nподряд',
+		'Серия года —\n{streak}',
+		'Ты держал\n{streak}\nбез остановки',
+		'Без срыва:\n{streak}',
 		'{streak} подряд —\nне сбивайся',
 	],
 	chronotype: [
