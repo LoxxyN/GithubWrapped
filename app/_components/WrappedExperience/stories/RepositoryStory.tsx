@@ -6,9 +6,29 @@ import type { StorySlideProps } from './StorySlide.type'
 export const RepositoryStory = ({ data, headline }: StorySlideProps) => {
 	const { topLanguage, topRepository } = data.stats
 	return (
-		<div className='story-layout story-layout-split story-layout-reverse'>
+		<div className='story-layout story-layout-split story-layout-reverse story-repository'>
+			<div className='story-deco story-deco-dots-right' aria-hidden='true'>
+				<svg
+					className='story-deco-scribble'
+					viewBox='0 0 480 260'
+					fill='none'
+					focusable='false'
+				>
+					<path
+						d='M-30 130 C 110 270 320 0 510 160'
+						stroke='currentColor'
+						strokeWidth='2.5'
+						strokeLinecap='round'
+					/>
+				</svg>
+				<span className='story-deco-dot story-deco-dot-a' />
+				<span className='story-deco-dot story-deco-dot-b' />
+				<span className='story-deco-dot story-deco-dot-c' />
+				<span className='story-deco-dot story-deco-dot-d' />
+				<div className='story-deco-stripes' />
+			</div>
 			<div className='story-copy'>
-				<p className='story-overline'>06 / Главный проект</p>
+				<p className='story-overline story-label'>06 / Главный проект</p>
 				<h2>
 					<Headline
 						template={headline}

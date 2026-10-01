@@ -1,6 +1,6 @@
 'use client'
 
-import type { WrappedData } from '@/src/shared/lib/types'
+import type { WrappedData } from '@shared/lib/types'
 import { Logo } from '@shared/ui'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
@@ -66,7 +66,11 @@ export const WrappedExperience = ({ data }: { data: WrappedData }) => {
 					defaultInterval={storyDuration}
 					width='100%'
 					height='100%'
-					storyContainerStyles={{ background: 'transparent' }}
+					storyContainerStyles={{
+						background: 'transparent',
+						position: 'absolute',
+						inset: 0,
+					}}
 					onStoryStart={(index: number) => setCurrentIndex(index)}
 				/>
 			</section>

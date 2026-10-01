@@ -6,7 +6,7 @@ export const storyPhrases: Record<StoryKind, readonly string[]> = {
 		'{username},\nтвой год в коде',
 		'Это всё, что\nсделал {username}',
 		'Год на GitHub:\n{username}',
-		'Смотри, что\nвышло у {username}',
+		'{username} —\nвот что вышло',
 	],
 	commits: [
 		'За год ты внёс\n{contributions}',

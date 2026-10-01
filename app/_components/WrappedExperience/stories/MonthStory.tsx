@@ -10,9 +10,28 @@ export const MonthStory = ({ data, headline }: StorySlideProps) => {
 	)
 
 	return (
-		<div className='story-layout story-layout-split'>
+		<div className='story-layout story-layout-split story-month'>
+			<div className='story-deco story-deco-dots-right' aria-hidden='true'>
+				<svg
+					className='story-deco-scribble'
+					viewBox='0 0 480 260'
+					fill='none'
+					focusable='false'
+				>
+					<path
+						d='M-25 220 C 150 40 310 260 505 70'
+						stroke='currentColor'
+						strokeWidth='2.5'
+						strokeLinecap='round'
+					/>
+				</svg>
+				<span className='story-deco-dot story-deco-dot-a' />
+				<span className='story-deco-dot story-deco-dot-b' />
+				<span className='story-deco-dot story-deco-dot-c' />
+				<div className='story-deco-stripes' />
+			</div>
 			<div className='story-copy'>
-				<p className='story-overline'>03 / Пик года</p>
+				<p className='story-overline story-label'>03 / Пик года</p>
 				<h2>
 					<Headline
 						template={headline}
