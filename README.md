@@ -1,6 +1,6 @@
 # GitHub Wrapped
 
-Персональный годовой отчёт по GitHub в формате «Spotify Wrapped»: вводишь username — получаешь свой год одной историей: коммиты, языки, streak, chronotype и лучший проект.
+Персональный годовой отчёт по GitHub в формате «Spotify Wrapped»: вводишь username — получаешь историю из 8 слайдов: коммиты, языки, месяцы, streak, хронотип и лучший репозиторий.
 
 **Автор:** [@LoxxyN](https://github.com/LoxxyN) · **Исходники:** [LoxxyN/GithubWrapped](https://github.com/LoxxyN/GithubWrapped)
 
@@ -8,9 +8,12 @@
 
 - [Next.js 16](https://nextjs.org) (App Router) + TypeScript
 - [Tailwind CSS 4](https://tailwindcss.com)
-- [Three.js](https://threejs.org) + [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber) — WebGL-фон Silk
+- [react-insta-stories](https://github.com/mohitk05/react-insta-stories) — движок сторис: автоплей, стрелки, тапы
+- [GSAP](https://gsap.com) + [@gsap/react](https://gsap.com/docs/v3/Plugins/React/) — анимации заголовков (SplitText)
+- [Three.js](https://threejs.org) + [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber) — WebGL-фон Silk на лендинге
+- [Zod](https://zod.dev) — валидация ответов GitHub API
 - [lucide-react](https://lucide.dev) — иконки
-- GitHub REST API (без SDK, обычный `fetch`)
+- GitHub GraphQL API (вклады) + REST API (поиск коммитов), без SDK — обычный `fetch`
 
 ## Старт
 
@@ -38,9 +41,17 @@ GITHUB_TOKEN=ghp_...
 
 | URL | Описание |
 | --- | --- |
-| `/` | Лендинг: инпут с валидацией username и WebGL-фон |
-| `/wrapped/[username]` | Иммерсивная презентация со слайдами (в разработке) |
+| `/` | Лендинг: инпут с валидацией username и WebGL-фон Silk |
+| `/wrapped/[username]` | Экран историй: 8 слайдов с автоплеем (7 с), навигацией стрелками/тапами и шарингом |
 | `GET /api/wrapped/[username]` | API: `WrappedData` со статистикой, ошибки мапятся в 400/404/429 |
+
+Данные загружаются на клиенте (`useWrappedData`): loading → error → `WrappedExperience`. Слайд с хронотипом скрывается, если в данных нет ночных коммитов.
+
+## Слайды
+
+`intro` → `commits` → `language` → `month` → `streak` → `chronotype` → `repository` → `summary`
+
+У каждого слайда 5 случайных вариантов заголовка (`storyPhrases.ts`), тема-акцент и своя раскладка. Финальный слайд умеет копировать ссылку на отчёт и вести на главную.
 
 ## API
 
@@ -49,14 +60,21 @@ GITHUB_TOKEN=ghp_...
 ```json
 {
   "year": 2026,
-  "profile": { "login": "octocat", "avatarUrl": "..." },
+  "profile": { "username": "octocat", "displayName": "The Octocat", "avatarUrl": "..." },
   "stats": {
-    "totalCommits": 1234,
-    "languages": [{ "name": "TypeScript", "commits": 800, "color": "..." }],
-    "months": [{ "label": "Январь", "commits": 120 }],
-    "longestStreak": { "days": 14, "start": "...", "end": "..." },
+    "totalContributions": 1234,
+    "totalRepositories": 42,
+    "followers": 120,
+    "languages": [{ "name": "TypeScript", "commits": 800, "percentage": 65, "color": "#3178c6" }],
+    "topLanguage": { "name": "TypeScript", "commits": 800, "percentage": 65, "color": "#3178c6" },
+    "months": [{ "month": 1, "label": "Январь", "contributions": 120 }],
+    "activeMonth": { "month": 1, "label": "Январь", "contributions": 120 },
+    "streak": 14,
+    "streakStart": "2026-01-05",
+    "streakEnd": "2026-01-18",
     "chronotype": "night-owl",
-    "topRepository": { "name": "...", "url": "...", "commits": 300 }
+    "nightCommitPercentage": 62,
+    "topRepository": { "name": "github-wrapped", "commits": 300, "stars": 15, "language": "TypeScript" }
   },
   "source": "github",
   "generatedAt": "2026-09-25T..."
@@ -70,16 +88,29 @@ GITHUB_TOKEN=ghp_...
 ```
 app/
   page.tsx                      # лендинг
-  wrapped/[username]/page.tsx   # экран слайдов (заглушка)
+  wrapped/[username]/page.tsx   # экран историй
   api/wrapped/[username]/       # route handler
-  _components/                  # секции страниц (Landing, WrappedExperience)
+  _components/
+    Landing/ LandingBackground/ LandingForm/   # секции лендинга
+    WrappedDataLoader/          # клиентская загрузка (useWrappedData)
+    WrappedLoading/ WrappedError/
+    WrappedExperience/          # экран историй
+      stories/                  # 8 слайдов + StoryContent
+      hooks/                    # useShare, useStoryPhrase
+      Headline.tsx              # кремовые плашки в заголовках
+      storyPhrases.ts           # по 5 фраз на слайд
+      WrappedExperience.css     # стили stories
 src/
   shared/
-    ui/                         # переиспользуемые: Logo, Silk
-    lib/api/                    # github.ts, mock-data.ts
+    ui/                         # Logo, Silk, SplitText
+    lib/api/                    # github, github-client, errors, schemas, mock-data
     lib/utils/                  # calculations, validation, format
-    lib/types/                  # типы WrappedData и др.
+    lib/types/                  # WrappedData и др.
 ```
+
+## Дизайн
+
+Дизайн-система «Wrapped Editorial» описана в [DESIGN.md](./DESIGN.md) (цвета, типографика, сетка, правила слайдов). Архитектура и договорённости — в [AGENTS.md](./AGENTS.md) и [plan.md](./plan.md).
 
 ## Команды проверки
 
@@ -91,4 +122,4 @@ npm run build
 
 ## Статус
 
-Реализован лендинг и серверная часть (расчёты, API, демо-данные). Экран слайдов `WrappedExperience` написан, но ещё не подключён к `/wrapped/[username]` — подробности в [plan.md](./plan.md).
+Реализовано полностью: лендинг, API с расчётами и демо-данными, экран из 8 историй с дизайном-системой, шаринг и ошибки.
